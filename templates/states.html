@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Tourism States</h2>
+
+<div class="state-grid">
+
+{% for state in states %}
+
+<div class="state-card">
+
+<img src="{{ url_for('static', filename='images/states/' + state.image) }}">
+
+<h3>{{ state.state_name }}</h3>
+
+<a href="/places/{{ state.id }}" class="btn">View</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

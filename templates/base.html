@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Indian Tourism Portal</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+<header class="navbar">
+
+    <h2 style="color: rgb(236, 239, 238);">Incredible India Tourism</h2>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/states">States</a>
+        <a href="/contact">Contact</a>
+        <a href="/login">Admin</a>
+    </nav>
+
+</header>
+{% block content %}{% endblock %}
+
+<footer class="footer">
+
+<p>© 2026 Incredible India Tourism</p>
+
+</footer>
+
+</body>
+</html>

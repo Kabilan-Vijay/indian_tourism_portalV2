@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Add Gallery Image</h2>
+
+<form method="POST">
+
+<select name="place">
+
+{% for place in places %}
+
+<option value="{{ place.id }}">{{ place.place_name }}</option>
+
+{% endfor %}
+
+</select>
+
+<input type="text" name="image" placeholder="Image filename">
+
+<button type="submit">Add</button>
+
+</form>
+
+{% endblock %}

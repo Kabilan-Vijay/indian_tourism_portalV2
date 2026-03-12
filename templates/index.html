@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="hero">
+    <div class="hero-content">
+        <h1>Explore Incredible India</h1>
+        <a href="/states" class="btn">Explore</a>
+    </div>
+</div>
+
+<div class="state-grid">
+
+{% for state in states %}
+
+<div class="state-card">
+
+<img src="{{ url_for('static', filename='images/' + state.image) }}">
+
+<h3>{{ state.state_name }}</h3>
+
+<p>{{ state.description }}</p>
+
+<a href="/places/{{ state.id }}" class="btn">Explore</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

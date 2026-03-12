@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Admin Dashboard</h1>
+
+<p>Total States: {{ states }}</p>
+<p>Total Places: {{ places }}</p>
+
+<a href="/admin/add_place">Add Place</a>
+<a href="/admin/add_gallery">Add Gallery Image</a>
+
+{% endblock %}

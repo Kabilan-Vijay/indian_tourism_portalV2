@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Add Place</h2>
+
+<form method="POST">
+
+<input type="text" name="place" placeholder="Place Name">
+
+<select name="state">
+
+{% for state in states %}
+
+<option value="{{ state.id }}">{{ state.state_name }}</option>
+
+{% endfor %}
+
+</select>
+
+<input type="text" name="image" placeholder="Image filename">
+
+<textarea name="description"></textarea>
+
+<button type="submit">Add</button>
+
+</form>
+
+{% endblock %}
