@@ -218,18 +218,59 @@ def add_place():
         place = request.form['place']
         state = request.form['state']
         desc = request.form['description']
-        image = request.form['image']
+        custom_filename = request.form.get('image_filename', '').strip()
+        image_name = ""
 
-        cursor2 = db.cursor()
+        # Handle file upload with custom filename
+        file = request.files.get('image_file')
+        if file and file.filename and custom_filename:
+            if allowed_file(file.filename):
+                # Use the custom filename but make it secure
+                safe_filename = secure_filename(custom_filename)
+                if not safe_filename:
+                    return render_template(
+                        "admin/add_place.html",
+                        states=states,
+                        error="Invalid filename. Please use only letters, numbers, underscores, hyphens, and dots."
+                    )
 
-        cursor2.execute(
-        "INSERT INTO places(place_name,state_id,description,image) VALUES(%s,%s,%s,%s)",
-        (place,state,desc,image)
-        )
+                # Check if file already exists
+                file_path = os.path.join(app.config["UPLOAD_FOLDER"], safe_filename)
+                if os.path.exists(file_path):
+                    return render_template(
+                        "admin/add_place.html",
+                        states=states,
+                        error=f"File '{safe_filename}' already exists. Please choose a different filename."
+                    )
 
-        db.commit()
+                # Save the file with the custom filename
+                file.save(file_path)
+                image_name = safe_filename
+        elif custom_filename and not file:
+            # Manual filename entry (existing file)
+            safe_filename = secure_filename(custom_filename)
+            if not safe_filename:
+                return render_template(
+                    "admin/add_place.html",
+                    states=states,
+                    error="Invalid filename. Please use only letters, numbers, underscores, hyphens, and dots."
+                )
+            image_name = safe_filename
+        else:
+            return render_template(
+                "admin/add_place.html",
+                states=states,
+                error="Please select a file to upload and provide a filename, or enter an existing filename."
+            )
 
-        return redirect('/admin/dashboard')
+        if image_name:
+            cursor2 = db.cursor()
+            cursor2.execute(
+            "INSERT INTO places(place_name,state_id,description,image) VALUES(%s,%s,%s,%s)",
+            (place,state,desc,image_name)
+            )
+            db.commit()
+            return redirect('/admin/dashboard')
 
     return render_template("admin/add_place.html", states=states)
 
@@ -247,20 +288,51 @@ def add_gallery():
     if request.method == "POST":
 
         place = request.form.get('place')
+        custom_filename = request.form.get('image_filename', '').strip()
         image_name = ""
 
-        # Prefer a file upload, fall back to a typed filename
+        # Handle file upload with custom filename
         file = request.files.get('image_file')
-        if file and file.filename:
+        if file and file.filename and custom_filename:
             if allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                # Avoid filename collisions with a timestamp prefix
-                filename = f"{int(time.time())}_{filename}"
-                file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+                # Use the custom filename but make it secure
+                # Remove any path components and ensure it's safe
+                safe_filename = secure_filename(custom_filename)
+                if not safe_filename:
+                    return render_template(
+                        "admin/add_gallery.html",
+                        places=places,
+                        error="Invalid filename. Please use only letters, numbers, underscores, hyphens, and dots."
+                    )
+
+                # Check if file already exists
+                file_path = os.path.join(app.config["UPLOAD_FOLDER"], safe_filename)
+                if os.path.exists(file_path):
+                    return render_template(
+                        "admin/add_gallery.html",
+                        places=places,
+                        error=f"File '{safe_filename}' already exists. Please choose a different filename."
+                    )
+
+                # Save the file with the custom filename
                 file.save(file_path)
-                image_name = filename
+                image_name = safe_filename
+        elif custom_filename and not file:
+            # Manual filename entry (existing file)
+            safe_filename = secure_filename(custom_filename)
+            if not safe_filename:
+                return render_template(
+                    "admin/add_gallery.html",
+                    places=places,
+                    error="Invalid filename. Please use only letters, numbers, underscores, hyphens, and dots."
+                )
+            image_name = safe_filename
         else:
-            image_name = request.form.get('image', '').strip()
+            return render_template(
+                "admin/add_gallery.html",
+                places=places,
+                error="Please select a file to upload and provide a filename, or enter an existing filename."
+            )
 
         if image_name:
             cursor2 = db.cursor()
@@ -270,13 +342,6 @@ def add_gallery():
             )
             db.commit()
             return redirect('/admin/dashboard')
-
-        # No image provided; show the form again with a simple error message
-        return render_template(
-            "admin/add_gallery.html",
-            places=places,
-            error="Please choose an image file to upload or enter an existing filename."
-        )
 
     return render_template("admin/add_gallery.html", places=places)
 

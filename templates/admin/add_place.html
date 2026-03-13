@@ -9,7 +9,7 @@
     </div>
 
     <div class="admin-form-container">
-        <form method="POST" class="admin-form" id="addPlaceForm">
+        <form method="POST" enctype="multipart/form-data" class="admin-form" id="addPlaceForm">
             <div class="form-row">
                 <div class="form-group">
                     <label for="place">Place Name *</label>
@@ -31,10 +31,22 @@
             </div>
 
             <div class="form-group">
-                <label for="image">Image Filename *</label>
-                <input type="text" id="image" name="image" placeholder="e.g., taj_mahal.jpg" required>
+                <label for="image_file">Upload Place Image *</label>
+                <input type="file" id="image_file" name="image_file" accept="image/*" onchange="updatePlaceFilename()" required>
                 <div class="form-icon">📷</div>
-                <div class="hint">Upload image to static/images/ folder first</div>
+                <div class="hint">Select an image file to upload for this place</div>
+            </div>
+
+            <div class="form-group">
+                <label for="image_filename">Image Filename *</label>
+                <input type="text" id="image_filename" name="image_filename" placeholder="e.g., taj_mahal.jpg" required>
+                <div class="form-icon">📝</div>
+                <div class="hint">Enter the desired filename (letters, numbers, underscores, hyphens, dots only)</div>
+            </div>
+
+            <div class="form-group preview-group" id="previewGroup" hidden>
+                <label>Image Preview</label>
+                <img id="previewImage" class="image-preview" src="" alt="Selected image preview">
             </div>
 
             <div class="form-group">
@@ -75,12 +87,36 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         const placeName = document.getElementById('place').value.trim();
         const state = document.getElementById('state').value;
-        const image = document.getElementById('image').value.trim();
+        const fileInput = document.getElementById('image_file');
+        const filenameInput = document.getElementById('image_filename');
         const desc = description.value.trim();
 
-        if (!placeName || !state || !image || !desc) {
+        const hasFile = fileInput.files.length > 0;
+        const hasFilename = filenameInput.value.trim().length > 0;
+
+        if (!placeName || !state || !desc) {
             e.preventDefault();
             alert('Please fill in all required fields.');
+            return;
+        }
+
+        if (!hasFile) {
+            e.preventDefault();
+            alert('Please select an image file to upload.');
+            return;
+        }
+
+        if (!hasFilename) {
+            e.preventDefault();
+            alert('Please provide a filename for the image.');
+            return;
+        }
+
+        // Validate filename format
+        const filename = filenameInput.value.trim();
+        if (!/^[a-zA-Z0-9_.-]+$/.test(filename)) {
+            e.preventDefault();
+            alert('Filename can only contain letters, numbers, underscores, hyphens, and dots.');
             return;
         }
 
@@ -107,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
             form.reset();
             charCount.textContent = '0';
             charCount.style.color = '#27ae60';
+            document.getElementById('previewGroup').hidden = true;
             submitBtn.innerHTML = '<span>Add Place</span><span class="btn-icon">➕</span>';
             submitBtn.disabled = false;
         }
@@ -117,6 +154,41 @@ document.addEventListener('DOMContentLoaded', function() {
         this.value = this.value.replace(/\b\w/g, l => l.toUpperCase());
     });
 });
+
+// File upload handling functions
+function updatePlaceFilename() {
+    const fileInput = document.getElementById('image_file');
+    const filenameInput = document.getElementById('image_filename');
+    const file = fileInput.files[0];
+
+    if (file) {
+        // Get the original filename and make it safe
+        let filename = file.name.toLowerCase();
+        // Replace spaces with underscores and remove special characters
+        filename = filename.replace(/\s+/g, '_').replace(/[^a-z0-9_.-]/g, '');
+        // Set the filename input
+        filenameInput.value = filename;
+        // Show preview
+        showPlacePreview(file);
+    }
+}
+
+function showPlacePreview(file) {
+    const previewGroup = document.getElementById('previewGroup');
+    const previewImage = document.getElementById('previewImage');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImage.src = e.target.result;
+            previewGroup.hidden = false;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        previewGroup.hidden = true;
+        previewImage.src = '';
+    }
+}
 </script>
 
 <style>
@@ -257,6 +329,22 @@ document.addEventListener('DOMContentLoaded', function() {
     color: #666;
     margin-top: 4px;
     font-style: italic;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: 10px;
+}
+
+.preview-group {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
 }
 </style>
 
