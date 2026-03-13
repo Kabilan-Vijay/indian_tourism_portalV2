@@ -13,6 +13,23 @@ db = pymysql.connect(
     cursorclass=pymysql.cursors.DictCursor
 )
 
+# Context processor to pass states and places to all templates
+@app.context_processor
+def inject_states():
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM states")
+    states = cursor.fetchall()
+    
+    # Get places for each state
+    states_with_places = []
+    for state in states:
+        cursor.execute("SELECT * FROM places WHERE state_id=%s", (state['id'],))
+        places = cursor.fetchall()
+        state['places'] = places
+        states_with_places.append(state)
+    
+    return {'all_states': states_with_places}
+
 # HOME PAGE
 
 @app.route('/')

@@ -2,32 +2,49 @@
 
 {% block content %}
 
-
 <div class="hero">
     <div class="hero-content">
         <h1>Explore Incredible India</h1>
-        <a href="/states" class="btn">Explore</a>
+        <p>Discover the magic of culture, history, and natural beauty</p>
+        <a href="/states" class="btn hero-btn">Start Exploring</a>
     </div>
 </div>
 
-<div class="state-grid">
+<section class="welcome-section">
+    <div class="welcome-container">
+        <h2 class="section-title">Welcome to Incredible India</h2>
+        <p class="front1">
+            Welcome to the Incredible India Tourism Portal! Discover the rich tapestry of culture, history, and natural beauty that India has to offer. From the majestic Himalayas in the north to the serene backwaters of Kerala in the south, from the vibrant festivals of Rajasthan to the tranquil beaches of Goa, India is a land of endless wonders. Whether you're an adventure seeker, a history buff, or a culture enthusiast, there's something for everyone in this incredible country. Start your journey today and explore the diverse states and their unique attractions!
+            <br>
+            <br>~ The Incredible India Tourism Team
+        </p>
+    </div>
+</section>
 
-{% for state in states %}
+<section class="states-section">
+    <div class="states-container">
+        <h2 class="section-title">Explore Our States</h2>
+        <p class="section-subtitle">Select a state to discover its unique attractions and treasures</p>
+        
+        <div class="state-grid">
+            {% for state in states %}
+            <div class="state-card">
+                <div class="state-image-wrapper">
+                    <img src="{{ url_for('static', filename='images/' + state.image) }}" alt="{{ state.state_name }}">
+                    <div class="state-overlay">
+                        <span class="state-label">Explore</span>
+                    </div>
+                </div>
 
-<div class="state-card">
-
-<img src="{{ url_for('static', filename='images/' + state.image) }}">
-
-<h3>{{ state.state_name }}</h3>
-
-<p>{{ state.description }}</p>
-
-<a href="/places/{{ state.id }}" class="btn">Explore</a>
-
-</div>
-
-{% endfor %}
-
-</div>
+                <div class="state-info">
+                    <h3>{{ state.state_name }}</h3>
+                    <p>{{ state.description }}</p>
+                    <a href="/places/{{ state.id }}" class="btn state-btn">View Places</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 
 {% endblock %}

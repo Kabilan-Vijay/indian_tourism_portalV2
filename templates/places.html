@@ -2,22 +2,27 @@
 
 {% block content %}
 
-<h2>Tourist Places</h2>
+<div class="places-header">
+    <h2 class="places-title">Tourist Places</h2>
+    <p class="places-subtitle">Discover the most beautiful and culturally significant destinations</p>
+    <p class="places-description">Explore stunning tourist destinations that showcase the rich heritage and natural beauty of this region. Each place offers unique experiences and unforgettable memories.</p>
+</div>
 
 <div class="places-grid">
 
 {% for place in places %}
 
 <div class="place-card">
+    <div class="place-image-wrapper">
+        <img src="{{ url_for('static', filename='images/' + place.image) }}" alt="{{ place.place_name }}">
+        <div class="place-overlay"></div>
+    </div>
 
-<img src="{{ url_for('static', filename='images/places/' + place.image) }}">
-
-<h3>{{ place.place_name }}</h3>
-
-<p>{{ place.description }}</p>
-
-<a href="/place/{{ place.id }}" class="btn">Gallery</a>
-
+    <div class="place-content">
+        <h3>{{ place.place_name }}</h3>
+        <p>{{ place.description }}</p>
+        <a href="/place/{{ place.id }}" class="btn place-btn">Explore Gallery</a>
+    </div>
 </div>
 
 {% endfor %}

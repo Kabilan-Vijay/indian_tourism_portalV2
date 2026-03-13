@@ -2,12 +2,48 @@
 
 {% block content %}
 
-<h1>Admin Dashboard</h1>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <p class="subtitle">Welcome back! Manage your tourism portal content</p>
+    </div>
 
-<p>Total States: {{ states }}</p>
-<p>Total Places: {{ places }}</p>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">🏛️</div>
+            <div class="stat-content">
+                <h3>Total States</h3>
+                <p class="stat-number">{{ states }}</p>
+            </div>
+            <div class="stat-bar"></div>
+        </div>
 
-<a href="/admin/add_place">Add Place</a>
-<a href="/admin/add_gallery">Add Gallery Image</a>
+        <div class="stat-card">
+            <div class="stat-icon">📍</div>
+            <div class="stat-content">
+                <h3>Total Places</h3>
+                <p class="stat-number">{{ places }}</p>
+            </div>
+            <div class="stat-bar"></div>
+        </div>
+    </div>
+
+    <div class="actions-section">
+        <h2>Quick Actions</h2>
+        <div class="actions-grid">
+            <a href="/admin/add_place" class="action-card">
+                <div class="action-icon">➕</div>
+                <h3>Add Place</h3>
+                <p>Add a new tourist destination</p>
+            </a>
+
+            <a href="/admin/add_gallery" class="action-card">
+                <div class="action-icon">🖼️</div>
+                <h3>Add Gallery Image</h3>
+                <p>Upload images for places</p>
+            </a>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
