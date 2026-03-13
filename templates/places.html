@@ -2,11 +2,41 @@
 
 {% block content %}
 
+{% if state %}
+<div class="places-header">
+    {% if state.state_name == 'Uttar Pradesh' %}
+        <h2 class="places-title">Uttar Pradesh - Land of Heritage & Spirituality</h2>
+        <p class="places-subtitle">Explore the heart of India's cultural heritage</p>
+        <p class="places-description">Discover the timeless beauty of Uttar Pradesh, home to the iconic Taj Mahal, sacred ghats of Varanasi, and ancient cities that have shaped India's history. From Mughal monuments to spiritual centers, experience the rich tapestry of India's most populous state.</p>
+    {% elif state.state_name == 'Tamil Nadu' %}
+        <h2 class="places-title">Tamil Nadu - Temple Heritage & Coastal Charm</h2>
+        <p class="places-subtitle">Where ancient temples meet pristine beaches</p>
+        <p class="places-description">Immerse yourself in Tamil Nadu's Dravidian architecture and spiritual heritage. From the magnificent Meenakshi Temple in Madurai to the scenic hill stations of Ooty, explore a state that seamlessly blends ancient traditions with natural beauty and coastal wonders.</p>
+    {% elif state.state_name == 'Karnataka' %}
+        <h2 class="places-title">Karnataka - Heritage & Innovation</h2>
+        <p class="places-subtitle">Where ancient ruins meet modern innovation</p>
+        <p class="places-description">Journey through Karnataka's fascinating blend of history and progress. Marvel at the UNESCO World Heritage site of Hampi, explore the coffee plantations of Coorg, and discover a state that has been a cradle of Indian civilization and technological advancement.</p>
+    {% elif state.state_name == 'Rajasthan' %}
+        <h2 class="places-title">Rajasthan - Royal Palaces & Desert Majesty</h2>
+        <p class="places-subtitle">The land of kings and golden sands</p>
+        <p class="places-description">Step into the world of Rajasthan's royal heritage and desert landscapes. From majestic forts and palaces to vibrant festivals and camel safaris, experience the regal charm and cultural richness of India's largest state, where every corner tells a story of valor and tradition.</p>
+    {% elif state.state_name == 'Gujarat' %}
+        <h2 class="places-title">Gujarat - Cultural Diversity & Natural Wonders</h2>
+        <p class="places-subtitle">Where tradition meets the sea</p>
+        <p class="places-description">Discover Gujarat's unique blend of cultural diversity and natural beauty. From the mesmerizing white salt desert of Rann of Kutch to the wildlife sanctuaries of Gir, explore a state known for its entrepreneurial spirit, vibrant festivals, and stunning coastal landscapes.</p>
+    {% else %}
+        <h2 class="places-title">{{ state.state_name }} - Tourist Destinations</h2>
+        <p class="places-subtitle">Discover amazing places to visit</p>
+        <p class="places-description">{{ state.description or 'Explore the beautiful tourist destinations in this region.' }}</p>
+    {% endif %}
+</div>
+{% else %}
 <div class="places-header">
     <h2 class="places-title">Tourist Places</h2>
-    <p class="places-subtitle">Discover the most beautiful and culturally significant destinations</p>
-    <p class="places-description">Explore stunning tourist destinations that showcase the rich heritage and natural beauty of this region. Each place offers unique experiences and unforgettable memories.</p>
+    <p class="places-subtitle">Discover the most beautiful destinations</p>
+    <p class="places-description">Explore stunning tourist destinations that showcase the rich heritage and natural beauty of this region.</p>
 </div>
+{% endif %}
 
 <div class="places-grid">
 

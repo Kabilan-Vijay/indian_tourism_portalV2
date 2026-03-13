@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modal Test</title>
+    <style>
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .gallery-item img {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 119, 182, 0);
+            display: flex;
+            align-items: flex-end;
+            transition: background 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            background: rgba(0, 119, 182, 0.7);
+        }
+
+        .gallery-info {
+            padding: 20px;
+            color: white;
+            width: 100%;
+            text-align: center;
+        }
+
+        .gallery-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .gallery-info p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .modal-content {
+            max-width: 90vw;
+            max-height: 80vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 10001;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+            text-decoration: none;
+        }
+
+        #caption {
+            margin-top: 20px;
+            text-align: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            max-width: 80vw;
+        }
+    </style>
+</head>
+<body>
+    <h1>Modal Test</h1>
+
+    <div class="gallery-item">
+        <img src="https://via.placeholder.com/200x150/0077b6/ffffff?text=Test+Image" alt="Test Image">
+        <div class="gallery-overlay">
+            <div class="gallery-info">
+                <h3>Test Place</h3>
+                <p>Click to view larger</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Image Viewing -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <div class="modal-content-container">
+            <img class="modal-content" id="modalImage" src="" alt="">
+            <div id="caption"></div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const captionText = document.getElementById('caption');
+            const closeBtn = document.getElementsByClassName('close')[0];
+
+            // Add click event to gallery images
+            document.querySelectorAll('.gallery-item img').forEach(img => {
+                img.onclick = function() {
+                    console.log('Image clicked');
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                    captionText.innerHTML = this.alt;
+                    // Prevent body scroll when modal is open
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+
+            // Close modal when clicking X
+            closeBtn.onclick = function() {
+                console.log('Close button clicked');
+                modal.style.display = "none";
+                document.body.style.overflow = 'auto';
+            }
+
+            // Close modal when clicking outside image
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    console.log('Modal background clicked');
+                    modal.style.display = "none";
+                    document.body.style.overflow = 'auto';
+                }
+            }
+
+            // Close modal on Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && modal.style.display === 'block') {
+                    console.log('Escape key pressed');
+                    modal.style.display = "none";
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

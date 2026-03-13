@@ -2,28 +2,262 @@
 
 {% block content %}
 
-<h2>Add Place</h2>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>Add New Place</h1>
+        <p class="subtitle">Add a new tourist destination to the portal</p>
+    </div>
 
-<form method="POST">
+    <div class="admin-form-container">
+        <form method="POST" class="admin-form" id="addPlaceForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="place">Place Name *</label>
+                    <input type="text" id="place" name="place" placeholder="Enter place name" required maxlength="100">
+                    <div class="form-icon">🏛️</div>
+                    <div class="hint">Maximum 100 characters</div>
+                </div>
 
-<input type="text" name="place" placeholder="Place Name">
+                <div class="form-group">
+                    <label for="state">State *</label>
+                    <select id="state" name="state" required>
+                        <option value="">Select a state</option>
+                        {% for state in states %}
+                        <option value="{{ state.id }}">{{ state.state_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="form-icon">🗺️</div>
+                </div>
+            </div>
 
-<select name="state">
+            <div class="form-group">
+                <label for="image">Image Filename *</label>
+                <input type="text" id="image" name="image" placeholder="e.g., taj_mahal.jpg" required>
+                <div class="form-icon">📷</div>
+                <div class="hint">Upload image to static/images/ folder first</div>
+            </div>
 
-{% for state in states %}
+            <div class="form-group">
+                <label for="description">Description *</label>
+                <textarea id="description" name="description" placeholder="Describe the place, its attractions, best time to visit, etc." required maxlength="1000" rows="6"></textarea>
+                <div class="textarea-icon">📝</div>
+                <div class="character-counter">
+                    <span id="charCount">0</span>/1000 characters
+                </div>
+            </div>
 
-<option value="{{ state.id }}">{{ state.state_name }}</option>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span>Add Place</span>
+                    <span class="btn-icon">➕</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
-{% endfor %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('addPlaceForm');
+    const description = document.getElementById('description');
+    const charCount = document.getElementById('charCount');
+    const submitBtn = document.getElementById('submitBtn');
 
-</select>
+    // Character counter for description
+    description.addEventListener('input', function() {
+        const count = this.value.length;
+        charCount.textContent = count;
+        charCount.style.color = count > 900 ? '#e74c3c' : count > 800 ? '#f39c12' : '#27ae60';
+    });
 
-<input type="text" name="image" placeholder="Image filename">
+    // Form validation
+    form.addEventListener('submit', function(e) {
+        const placeName = document.getElementById('place').value.trim();
+        const state = document.getElementById('state').value;
+        const image = document.getElementById('image').value.trim();
+        const desc = description.value.trim();
 
-<textarea name="description"></textarea>
+        if (!placeName || !state || !image || !desc) {
+            e.preventDefault();
+            alert('Please fill in all required fields.');
+            return;
+        }
 
-<button type="submit">Add</button>
+        if (placeName.length < 3) {
+            e.preventDefault();
+            alert('Place name must be at least 3 characters long.');
+            return;
+        }
 
-</form>
+        if (desc.length < 10) {
+            e.preventDefault();
+            alert('Description must be at least 10 characters long.');
+            return;
+        }
+
+        // Show loading state
+        submitBtn.innerHTML = '<span>Adding...</span><span class="btn-icon">⏳</span>';
+        submitBtn.disabled = true;
+    });
+
+    // Reset form function
+    window.resetForm = function() {
+        if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
+            form.reset();
+            charCount.textContent = '0';
+            charCount.style.color = '#27ae60';
+            submitBtn.innerHTML = '<span>Add Place</span><span class="btn-icon">➕</span>';
+            submitBtn.disabled = false;
+        }
+    };
+
+    // Auto-capitalize place name
+    document.getElementById('place').addEventListener('input', function() {
+        this.value = this.value.replace(/\b\w/g, l => l.toUpperCase());
+    });
+});
+</script>
+
+<style>
+.admin-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-form .form-group {
+    margin-bottom: 25px;
+}
+
+.admin-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #005461;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-form input[type="text"],
+.admin-form select,
+.admin-form textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #f9f9f9;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.admin-form input[type="text"]:focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+    outline: none;
+    border-color: #0077b6;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(0, 119, 182, 0.1);
+    transform: translateY(-2px);
+}
+
+.admin-form textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.character-counter {
+    text-align: right;
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #0077b6 0%, #00a3e0 100%);
+    color: white;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #00a3e0 0%, #0077b6 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 119, 182, 0.4);
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-icon {
+    font-size: 16px;
+}
+
+.hint {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    font-style: italic;
+}
+</style>
 
 {% endblock %}

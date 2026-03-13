@@ -2,16 +2,508 @@
 
 {% block content %}
 
-<h2>{{ place.place_name }} Gallery</h2>
-
-<div class="gallery-grid">
-
-{% for img in images %}
-
-<img src="{{ url_for('static', filename='images/' + img.image) }}">
-
-{% endfor %}
-
+<!-- Place Header Section -->
+<div class="place-header">
+    <div class="place-hero">
+        <div class="place-hero-content">
+            <h1 class="place-title">{{ place.place_name }}</h1>
+            <div class="place-description">
+                {% if place.place_name == 'Taj Mahal' %}
+                    <p>The Taj Mahal, a UNESCO World Heritage Site, is an ivory-white marble mausoleum on the south bank of the Yamuna river in the Indian city of Agra. It was commissioned in 1632 by the Mughal emperor Shah Jahan to house the tomb of his favorite wife, Mumtaz Mahal. The Taj Mahal is widely recognized as "the jewel of Muslim art in India" and one of the universally admired masterpieces of the world's heritage.</p>
+                    <div class="place-facts">
+                        <div class="fact-item">
+                            <span class="fact-icon">🏗️</span>
+                            <span>Built: 1632-1653</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">👑</span>
+                            <span>Commissioned by: Shah Jahan</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">🏛️</span>
+                            <span>UNESCO World Heritage Site</span>
+                        </div>
+                    </div>
+                {% elif place.place_name == 'Varanasi Ghats' %}
+                    <p>Varanasi, also known as Benares or Kashi, is one of the oldest continuously inhabited cities in the world and a major religious hub in India. The ghats along the Ganges River are sacred bathing places where Hindus come to perform rituals, pray, and cremate their loved ones. The city is considered the spiritual capital of India and attracts millions of pilgrims annually.</p>
+                    <div class="place-facts">
+                        <div class="fact-item">
+                            <span class="fact-icon">🌊</span>
+                            <span>Sacred River: Ganges</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">🙏</span>
+                            <span>Hindu Pilgrimage Site</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">🏛️</span>
+                            <span>Ancient City: 3,000+ years old</span>
+                        </div>
+                    </div>
+                {% elif place.place_name == 'Meenakshi Temple' %}
+                    <p>The Meenakshi Temple, also known as Meenakshi Amman Temple, is a historic Hindu temple located in the city of Madurai in Tamil Nadu. Dedicated to Goddess Meenakshi (an avatar of Goddess Parvati) and her consort Lord Shiva, this temple is renowned for its stunning Dravidian architecture, intricate sculptures, and vibrant festivals. It's one of the most important temples in South India.</p>
+                    <div class="place-facts">
+                        <div class="fact-item">
+                            <span class="fact-icon">🕉️</span>
+                            <span>Dedicated to: Goddess Meenakshi</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">🏛️</span>
+                            <span>Dravidian Architecture</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">🎭</span>
+                            <span>Famous Festivals: Meenakshi Kalyanam</span>
+                        </div>
+                    </div>
+                {% elif place.place_name == 'Ooty Hill Station' %}
+                    <p>Ooty, also known as Udhagamandalam, is a popular hill station in the Nilgiri Hills of Tamil Nadu. Famous for its tea plantations, botanical gardens, and colonial architecture, Ooty offers breathtaking views of valleys and mountains. The town was established by the British as a summer retreat and remains a favorite destination for nature lovers and honeymooners.</p>
+                    <div class="place-facts">
+                        <div class="fact-item">
+                            <span class="fact-icon">🏔️</span>
+                            <span>Elevation: 2,240 meters</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">☕</span>
+                            <span>Famous for: Tea Plantations</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">🌸</span>
+                            <span>Botanical Garden: Ooty Botanical Gardens</span>
+                        </div>
+                    </div>
+                {% elif place.place_name == 'Hampi Ruins' %}
+                    <p>Hampi, a UNESCO World Heritage Site, is the ruins of the ancient city of Vijayanagara, the former capital of the Vijayanagara Empire. Located in Karnataka, Hampi is renowned for its stunning landscape dotted with numerous monuments, temples, and ruins that showcase the grandeur of medieval South Indian architecture and culture.</p>
+                    <div class="place-facts">
+                        <div class="fact-item">
+                            <span class="fact-icon">🏛️</span>
+                            <span>UNESCO World Heritage Site</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">👑</span>
+                            <span>Ancient Capital: Vijayanagara Empire</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">🗿</span>
+                            <span>Stone Architecture</span>
+                        </div>
+                    </div>
+                {% elif place.place_name == 'Rajasthan Forts' %}
+                    <p>Rajasthan is home to some of the most magnificent forts in India, showcasing the rich history and architectural brilliance of Rajputana. From the majestic Amber Fort to the imposing Mehrangarh Fort, these structures tell tales of valor, romance, and royal splendor. Each fort has its unique story and architectural style.</p>
+                    <div class="place-facts">
+                        <div class="fact-item">
+                            <span class="fact-icon">🏰</span>
+                            <span>Rajputana Architecture</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">⚔️</span>
+                            <span>Symbol of Rajput Valor</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">👑</span>
+                            <span>Royal Heritage</span>
+                        </div>
+                    </div>
+                {% elif place.place_name == 'Rann of Kutch' %}
+                    <p>The Rann of Kutch is a vast salt desert located in the Kutch district of Gujarat. During the monsoon season, it transforms into a mesmerizing white landscape, and during winter, it becomes a venue for the famous Rann Utsav festival. This unique geographical feature offers an otherworldly experience with its stark beauty and cultural significance.</p>
+                    <div class="place-facts">
+                        <div class="fact-item">
+                            <span class="fact-icon">🏜️</span>
+                            <span>Salt Desert Landscape</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">🎪</span>
+                            <span>Rann Utsav Festival</span>
+                        </div>
+                        <div class="fact-item">
+                            <span class="fact-icon">🌙</span>
+                            <span>White Desert Experience</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>{{ place.description }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="place-hero-image">
+            <img src="{{ url_for('static', filename='images/' + place.image) }}" alt="{{ place.place_name }}">
+        </div>
+    </div>
 </div>
+
+<!-- Gallery Section -->
+<div class="gallery-section">
+    <div class="gallery-header">
+        <h2>Photo Gallery</h2>
+        <p>Explore the beauty of {{ place.place_name }} through these stunning images</p>
+    </div>
+
+    <div class="gallery-grid">
+        {% for img in images %}
+        <div class="gallery-item">
+            <img src="{{ url_for('static', filename='images/' + img.image) }}" alt="{{ place.place_name }} image {{ loop.index }}">
+            <div class="gallery-overlay">
+                <div class="gallery-info">
+                    <h3>{{ place.place_name }}</h3>
+                    <p>Click to view larger</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal for Image Viewing -->
+<div id="imageModal" class="modal">
+    <span class="close">&times;</span>
+    <div class="modal-content-container">
+        <img class="modal-content" id="modalImage" src="" alt="">
+        <div id="caption"></div>
+    </div>
+</div>
+
+<script>
+// Modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const captionText = document.getElementById('caption');
+    const closeBtn = document.getElementsByClassName('close')[0];
+
+    // Add click event to gallery items
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    galleryItems.forEach((item) => {
+        item.onclick = function() {
+            const img = this.querySelector('img');
+            if (img) {
+                modal.style.display = "block";
+                modalImg.src = img.src;
+                captionText.innerHTML = img.alt;
+                // Prevent body scroll when modal is open
+                document.body.style.overflow = 'hidden';
+            }
+        }
+    });
+
+    // Close modal when clicking X
+    closeBtn.onclick = function() {
+        modal.style.display = "none";
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close modal when clicking outside image
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.style.display === 'block') {
+            modal.style.display = "none";
+            document.body.style.overflow = 'auto';
+        }
+    });
+});
+</script>
+
+<style>
+.place-header {
+    margin-bottom: 50px;
+}
+
+.place-hero {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(0, 119, 182, 0.05), rgba(0, 212, 255, 0.05));
+    padding: 60px 40px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.place-hero-content {
+    padding-right: 20px;
+}
+
+.place-title {
+    font-size: 48px;
+    color: #005461;
+    margin: 0 0 20px 0;
+    font-weight: 900;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #0077b6, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+}
+
+.place-description p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.place-facts {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.fact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    padding: 10px 15px;
+    border-radius: 25px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    font-weight: 600;
+    color: #005461;
+    border: 1px solid rgba(0, 119, 182, 0.2);
+}
+
+.fact-icon {
+    font-size: 16px;
+}
+
+.place-hero-image img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.place-hero-image img:hover {
+    transform: scale(1.05);
+}
+
+.gallery-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.gallery-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.gallery-header h2 {
+    font-size: 36px;
+    color: #005461;
+    margin: 0 0 10px 0;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.gallery-header p {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+    font-weight: 500;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.gallery-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 119, 182, 0);
+    display: flex;
+    align-items: flex-end;
+    transition: background 0.3s ease;
+}
+
+.gallery-item:hover .gallery-overlay {
+    background: rgba(0, 119, 182, 0.7);
+}
+
+.gallery-info {
+    padding: 20px;
+    color: white;
+    width: 100%;
+    text-align: center;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .gallery-info {
+    transform: translateY(0);
+}
+
+.gallery-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.gallery-info p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-content {
+    max-width: 90vw;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #fff;
+    font-size: 50px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    z-index: 10001;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+    text-decoration: none;
+}
+
+#caption {
+    margin-top: 20px;
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    max-width: 80vw;
+}
+
+@media (max-width: 768px) {
+    .place-hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .place-hero-content {
+        padding-right: 0;
+    }
+
+    .place-title {
+        font-size: 32px;
+    }
+
+    .place-facts {
+        justify-content: center;
+    }
+
+    .gallery-section {
+        padding: 0 20px;
+    }
+}
+</style>
 
 {% endblock %}

@@ -1,9 +1,30 @@
 from flask import Flask, render_template, request, redirect, session
+from werkzeug.utils import secure_filename
+import os
+import time
 import pymysql
 import config
 
 app = Flask(__name__)
 app.secret_key = "tourism_secret"
+
+# Upload settings for admin image uploads
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "images")
+ALLOWED_IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+# Ensure upload folder exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+
+def allowed_file(filename):
+    """Return True if the filename has an allowed image extension."""
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
+    )
+
 
 db = pymysql.connect(
     host=config.DB_HOST,
@@ -63,6 +84,10 @@ def places(state_id):
 
     cursor = db.cursor()
 
+    # Get state information
+    cursor.execute("SELECT * FROM states WHERE id=%s", (state_id,))
+    state = cursor.fetchone()
+
     cursor.execute(
     "SELECT * FROM places WHERE state_id=%s",
     (state_id,)
@@ -70,7 +95,7 @@ def places(state_id):
 
     places = cursor.fetchall()
 
-    return render_template("places.html", places=places)
+    return render_template("places.html", places=places, state=state)
 
 
 # GALLERY PAGE
@@ -221,19 +246,37 @@ def add_gallery():
 
     if request.method == "POST":
 
-        place = request.form['place']
-        image = request.form['image']
+        place = request.form.get('place')
+        image_name = ""
 
-        cursor2 = db.cursor()
+        # Prefer a file upload, fall back to a typed filename
+        file = request.files.get('image_file')
+        if file and file.filename:
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                # Avoid filename collisions with a timestamp prefix
+                filename = f"{int(time.time())}_{filename}"
+                file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+                file.save(file_path)
+                image_name = filename
+        else:
+            image_name = request.form.get('image', '').strip()
 
-        cursor2.execute(
-        "INSERT INTO place_images(place_id,image) VALUES(%s,%s)",
-        (place,image)
+        if image_name:
+            cursor2 = db.cursor()
+            cursor2.execute(
+            "INSERT INTO place_images(place_id,image) VALUES(%s,%s)",
+            (place,image_name)
+            )
+            db.commit()
+            return redirect('/admin/dashboard')
+
+        # No image provided; show the form again with a simple error message
+        return render_template(
+            "admin/add_gallery.html",
+            places=places,
+            error="Please choose an image file to upload or enter an existing filename."
         )
-
-        db.commit()
-
-        return redirect('/admin/dashboard')
 
     return render_template("admin/add_gallery.html", places=places)
 

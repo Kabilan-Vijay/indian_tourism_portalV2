@@ -2,24 +2,71 @@
 
 {% block content %}
 
-<h2>Add Gallery Image</h2>
+<div class="admin-page">
+  <div class="admin-card">
+    <h2>Add Gallery Image</h2>
 
-<form method="POST">
+    {% if error %}
+      <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
 
-<select name="place">
+    <form method="POST" enctype="multipart/form-data" class="admin-form">
+      <div class="form-group">
+        <label for="place">Choose a Place</label>
+        <select name="place" id="place" required>
+          <option value="" disabled selected>Select a place</option>
+          {% for place in places %}
+            <option value="{{ place.id }}">{{ place.place_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-{% for place in places %}
+      <div class="form-group">
+        <label for="image_file">Upload Image</label>
+        <input type="file" id="image_file" name="image_file" accept="image/*">
+        <small class="hint">Drag &amp; drop an image or choose a file from your device.</small>
+      </div>
 
-<option value="{{ place.id }}">{{ place.place_name }}</option>
+      <div class="form-group">
+        <label for="image">Existing Image Filename</label>
+        <input type="text" id="image" name="image" placeholder="e.g. taj1.jpg">
+      </div>
 
-{% endfor %}
+      <div class="form-group preview-group" id="previewGroup" hidden>
+        <label>Preview</label>
+        <img id="previewImage" class="image-preview" src="" alt="Selected image preview">
+      </div>
 
-</select>
+      <button type="submit" class="btn">Add to Gallery</button>
+    </form>
+  </div>
+</div>
 
-<input type="text" name="image" placeholder="Image filename">
+<script>
+const fileInput = document.getElementById('image_file');
+const previewGroup = document.getElementById('previewGroup');
+const previewImage = document.getElementById('previewImage');
+const filenameInput = document.getElementById('image');
 
-<button type="submit">Add</button>
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files[0];
+  if (!file) {
+    previewGroup.hidden = true;
+    previewImage.src = '';
+    return;
+  }
 
-</form>
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewImage.src = e.target.result;
+    previewGroup.hidden = false;
+  };
+  reader.readAsDataURL(file);
+
+  if (filenameInput) {
+    filenameInput.value = '';
+  }
+});
+</script>
 
 {% endblock %}
